@@ -21,9 +21,9 @@ st.title("ChatGPT-like clone")
 
 # Replicate Credentials
 with st.sidebar:
-    st.title('💬 ChatGPT-like Chatbot')
+    st.title('💬 Chatbot')
 
-    models = ['gpt-3.5-turbo', 'gpt-4', 'llama2']
+    models = ['gpt-3.5-turbo', 'gpt-4', 'HugChat']
     model = st.sidebar.selectbox("Select Model", models)
 
     if ((model == 'gpt-3.5-turbo') or (model == 'gpt-4')):
@@ -36,6 +36,19 @@ with st.sidebar:
                 st.warning('Please enter your credentials!', icon='⚠️')
             else:
                 st.success('Proceed to entering your prompt message!', icon='👉')
+    else:
+        if (model == 'HugChat'):
+            if ('EMAIL' in st.secrets) and ('PASS' in st.secrets):
+                st.success('HuggingFace Login credentials already provided!', icon='✅')
+                hf_email = st.secrets['EMAIL']
+                hf_pass = st.secrets['PASS']
+            else:
+                hf_email = st.text_input('Enter E-mail:', type='password')
+                hf_pass = st.text_input('Enter password:', type='password')
+                if not (hf_email and hf_pass):
+                    st.warning('Please enter your credentials!', icon='⚠️')
+                else:
+                    st.success('Proceed to entering your prompt message!', icon='👉')
 
     with st.expander("Advanced Settings"):
         if ((model == 'gpt-3.5-turbo') or (model == 'gpt-4')):
@@ -51,7 +64,7 @@ with st.sidebar:
             presence_penalty = st.slider("Presence Penalty", min_value=0.0, max_value=1.0, value=0.0, step=0.1)
             n = st.slider("n", min_value=1, max_value=5, value=1, step=1)
         else:
-            if (model == 'llama2'):
+            if (model == 'HugChat'):
                 dummy = st.slider("Temperature", min_value=0.1, max_value=1.0, value=0.7, step=0.1)
 
     openai.api_key = openai_api
