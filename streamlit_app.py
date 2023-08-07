@@ -73,12 +73,12 @@ if prompt := st.chat_input("What is up?"):
             full_response += response.choices[0].delta.get("content", "")
             message_placeholder.markdown(full_response + "▌")
         message_placeholder.markdown(full_response)
-        generate_and_play(full_response)
+        generate_and_play(audio_text=full_response)
     st.session_state.messages.append({"role": "assistant", "content": full_response})
 
 
 def generate_and_play(audio_text):
-    set_api_key(ELEVENLABS_API_KEY)
+    set_api_key(st.secrets['ELEVENLABS_API_KEY'])
     # Generate audio using ElevenLabs
     audio = generate(text=audio_text, voice=getVoice("Bella"), 
                      model="eleven_monolingual_v1")
