@@ -5,14 +5,17 @@ from elevenlabs import generate, set_api_key
 def generate_and_play(audio_text):
     elevenlabs_key = st.secrets['ELEVENLABS_API_KEY']
     set_api_key(elevenlabs_key)
-    # Generate audio using ElevenLabs
-    audio = generate(
-        text=audio_text,
-        voice="Bella",
-        model='eleven_monolingual_v1'
-    )
-    # Play the audio
-    st.audio(audio, format="audio/wav", start_time=0, sample_rate=None)
+    try:
+        # Generate audio using ElevenLabs
+        audio = generate(
+            text=audio_text,
+            voice="Bella",
+            model='eleven_monolingual_v1'
+        )
+        # Play the audio
+        st.audio(audio, format="audio/wav", start_time=0, sample_rate=None)
+    except:
+        pass
 
 st.title("ChatGPT-like clone")
 
