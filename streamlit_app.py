@@ -2,6 +2,18 @@ import openai
 import streamlit as st
 from elevenlabs import generate, set_api_key
 
+def generate_and_play(audio_text):
+    elevenlabs_key = st.secrets['ELEVENLABS_API_KEY']
+    set_api_key(elevenlabs_key)
+    # Generate audio using ElevenLabs
+    audio = generate(
+        text=audio_text,
+        voice="Bella",
+        model='eleven_monolingual_v1'
+    )
+    # Play the audio
+    st.audio(audio, format="audio/wav", start_time=0, sample_rate=None)
+
 st.title("ChatGPT-like clone")
 
 # Replicate Credentials
@@ -81,16 +93,6 @@ if prompt := st.chat_input("What is up?"):
     st.session_state.messages.append({"role": "assistant", "content": full_response})
 
 
-def generate_and_play(audio_text):
-    elevenlabs_key = st.secrets['ELEVENLABS_API_KEY']
-    set_api_key(elevenlabs_key)
-    # Generate audio using ElevenLabs
-    audio = generate(
-        text=audio_text,
-        voice="Bella",
-        model='eleven_monolingual_v1'
-    )
-    # Play the audio
-    st.audio(audio, format="audio/wav", start_time=0, sample_rate=None)
+
 
 
