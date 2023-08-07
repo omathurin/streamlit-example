@@ -16,7 +16,7 @@ with st.sidebar:
         else:
             st.success('Proceed to entering your prompt message!', icon='👉')
 
-    models = ['gpt-3.5-turbo', 'text-davinci-003', 'gpt-4']
+    models = ['gpt-3.5-turbo', 'gpt-4']
     model = st.sidebar.selectbox("Select Model", models)
     if ((model == 'gpt-3.5-turbo') or (model == 'text-davinci-003')):
         max_ = 4096
@@ -30,9 +30,6 @@ with st.sidebar:
         frequency_penalty = st.slider("Frequency Penalty", min_value=0.0, max_value=1.0, value=0.0, step=0.1)
         presence_penalty = st.slider("Presence Penalty", min_value=0.0, max_value=1.0, value=0.0, step=0.1)
         n = st.slider("n", min_value=1, max_value=5, value=1, step=1)
-        # Add best_of option for text-davinci-003
-        if model == 'text-davinci-003':
-            best_of = st.slider("Best Of", min_value=1, max_value=5, value=1, step=1)
 
 openai.api_key = openai_api
 
