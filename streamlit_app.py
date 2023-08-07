@@ -5,7 +5,7 @@ st.title("ChatGPT-like clone")
 
 # Replicate Credentials
 with st.sidebar:
-    st.title('🦙💬 ChatGPT-like Chatbot')
+    st.title('💬 ChatGPT-like Chatbot')
     if 'OPENAI_API_KEY' in st.secrets:
         st.success('API key already provided!', icon='✅')
         openai_api = st.secrets['OPENAI_API_KEY']
