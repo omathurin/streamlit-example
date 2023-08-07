@@ -3,9 +3,6 @@ import streamlit as st
 
 st.title("ChatGPT-like clone")
 
-models = ['gpt-3.5-turbo', 'text-davinci-003', 'gpt-4']
-model = st.sidebar.selectbox("Select Model", models)
-
 # Replicate Credentials
 with st.sidebar:
     st.title('🦙💬 ChatGPT-like Chatbot')
@@ -19,6 +16,8 @@ with st.sidebar:
         else:
             st.success('Proceed to entering your prompt message!', icon='👉')
 
+    models = ['gpt-3.5-turbo', 'text-davinci-003', 'gpt-4']
+    model = st.sidebar.selectbox("Select Model", models)
     if ((model == 'gpt-3.5-turbo') or (model == 'text-davinci-003')):
         max_ = 4096
     else:
