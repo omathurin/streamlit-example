@@ -30,12 +30,14 @@ with st.sidebar:
         if 'OPENAI_API_KEY' in st.secrets:
             st.success('API key already provided!', icon='✅')
             openai_api = st.secrets['OPENAI_API_KEY']
+                
         else:
             openai_api = st.text_input('Enter OpenAI API token:', type='password')
             if not (openai_api.startswith('sk-') and len(openai_api)==51):
                 st.warning('Please enter your credentials!', icon='⚠️')
             else:
                 st.success('Proceed to entering your prompt message!', icon='👉')
+        openai.api_key = openai_api
     else:
         if (model == 'HugChat'):
             if ('EMAIL' in st.secrets) and ('PASS' in st.secrets):
@@ -66,8 +68,6 @@ with st.sidebar:
         else:
             if (model == 'HugChat'):
                 dummy = st.slider("Temperature", min_value=0.1, max_value=1.0, value=0.7, step=0.1)
-
-    openai.api_key = openai_api
 
 if "openai_model" not in st.session_state:
     #st.session_state["openai_model"] = "gpt-3.5-turbo"
