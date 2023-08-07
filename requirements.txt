@@ -1,4 +1,5 @@
 streamlit
 openai
-pyaudio
-websockets
+numpy 
+pydub
+matplotlib
