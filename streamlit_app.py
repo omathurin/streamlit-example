@@ -1,6 +1,8 @@
 import openai
 import streamlit as st
 from elevenlabs import generate, set_api_key
+from hugchat import hugchat
+from hugchat.login import Login
 
 def generate_and_play(audio_text):
     elevenlabs_key = st.secrets['ELEVENLABS_API_KEY']
@@ -69,6 +71,16 @@ with st.sidebar:
             if (model == 'HugChat'):
                 dummy = st.slider("Temperature", min_value=0.1, max_value=1.0, value=0.7, step=0.1)
 
+
+# Function for generating LLM response
+def hf_generate_response(prompt_input, email, passwd):
+    # Hugging Face Login
+    sign = Login(email, passwd)
+    cookies = sign.login()
+    # Create ChatBot                        
+    chatbot = hugchat.ChatBot(cookies=cookies.get_dict())
+    return chatbot.chat(prompt_input)
+
 if "openai_model" not in st.session_state:
     #st.session_state["openai_model"] = "gpt-3.5-turbo"
     st.session_state["openai_model"] = model
@@ -88,22 +100,28 @@ if prompt := st.chat_input("What is up?"):
     with st.chat_message("assistant"):
         message_placeholder = st.empty()
         full_response = ""
-        for response in openai.ChatCompletion.create(
-            model=st.session_state["openai_model"],
-            messages=[
-                {"role": m["role"], "content": m["content"]}
-                for m in st.session_state.messages
-            ],
-            temperature=temperature,
-            max_tokens=max_tokens,
-            top_p=top_p,
-            frequency_penalty=frequency_penalty,
-            presence_penalty=presence_penalty,
-            n=n,
-            stream=True,
-        ):
-            full_response += response.choices[0].delta.get("content", "")
-            message_placeholder.markdown(full_response + "▌")
+        if (model == 'HugChat'):
+            for response in hf_generate_response(prompt, hf_email, hf_pass) :
+                full_response += response
+                message_placeholder.markdown(full_response + "▌")
+        else:
+            if ((model == 'gpt-3.5-turbo') or (model == 'gpt-4')):
+                for response in openai.ChatCompletion.create(
+                    model=st.session_state["openai_model"],
+                    messages=[
+                        {"role": m["role"], "content": m["content"]}
+                        for m in st.session_state.messages
+                    ],
+                    temperature=temperature,
+                    max_tokens=max_tokens,
+                    top_p=top_p,
+                    frequency_penalty=frequency_penalty,
+                    presence_penalty=presence_penalty,
+                    n=n,
+                    stream=True,
+                ):
+                    full_response += response.choices[0].delta.get("content", "")
+                    message_placeholder.markdown(full_response + "▌")
         message_placeholder.markdown(full_response)
         generate_and_play(audio_text=full_response)
     st.session_state.messages.append({"role": "assistant", "content": full_response})
