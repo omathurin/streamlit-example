@@ -7,20 +7,19 @@ st.title("ChatGPT-like clone")
 with st.sidebar:
     st.title('💬 ChatGPT-like Chatbot')
 
-    models = ['gpt-3.5-turbo', 'gpt-4']
+    models = ['gpt-3.5-turbo', 'gpt-4', 'llama2']
     model = st.sidebar.selectbox("Select Model", models)
 
-    with st.expander("Advanced Settings"):
-        if ((model == 'gpt-3.5-turbo') or (model == 'gpt-4')):
-            if 'OPENAI_API_KEY' in st.secrets:
-                st.success('API key already provided!', icon='✅')
-                openai_api = st.secrets['OPENAI_API_KEY']
+    if ((model == 'gpt-3.5-turbo') or (model == 'gpt-4')):
+        if 'OPENAI_API_KEY' in st.secrets:
+            st.success('API key already provided!', icon='✅')
+            openai_api = st.secrets['OPENAI_API_KEY']
+        else:
+            openai_api = st.text_input('Enter OpenAI API token:', type='password')
+            if not (openai_api.startswith('sk-') and len(openai_api)==51):
+                st.warning('Please enter your credentials!', icon='⚠️')
             else:
-                openai_api = st.text_input('Enter OpenAI API token:', type='password')
-                if not (openai_api.startswith('sk-') and len(openai_api)==51):
-                    st.warning('Please enter your credentials!', icon='⚠️')
-                else:
-                    st.success('Proceed to entering your prompt message!', icon='👉')
+                st.success('Proceed to entering your prompt message!', icon='👉')
 
     with st.expander("Advanced Settings"):
         if ((model == 'gpt-3.5-turbo') or (model == 'gpt-4')):
@@ -35,9 +34,10 @@ with st.sidebar:
             frequency_penalty = st.slider("Frequency Penalty", min_value=0.0, max_value=1.0, value=0.0, step=0.1)
             presence_penalty = st.slider("Presence Penalty", min_value=0.0, max_value=1.0, value=0.0, step=0.1)
             n = st.slider("n", min_value=1, max_value=5, value=1, step=1)
+        else if (model == 'llama2'):
+            dummy = st.slider("Temperature", min_value=0.1, max_value=1.0, value=0.7, step=0.1)
 
     openai.api_key = openai_api
-
 
 if "openai_model" not in st.session_state:
     #st.session_state["openai_model"] = "gpt-3.5-turbo"
