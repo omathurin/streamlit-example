@@ -3,6 +3,21 @@ import streamlit as st
 
 st.title("ChatGPT-like clone")
 
+
+# Replicate Credentials
+with st.sidebar:
+    st.title('🦙💬 ChatGPT-like Chatbot')
+    if 'OPENAI_API_KEY' in st.secrets:
+        st.success('API key already provided!', icon='✅')
+        openai_api = st.secrets['OPENAI_API_KEY']
+    else:
+        openai_api = st.text_input('Enter OpenAI API token:', type='password')
+        if not (openai_api.startswith('sk-') and len(openai_api)==51):
+            st.warning('Please enter your credentials!', icon='⚠️')
+        else:
+            st.success('Proceed to entering your prompt message!', icon='👉')
+os.environ['OPENAI_API_KEY'] = openai_api
+
 openai.api_key = st.secrets["OPENAI_API_KEY"]
 
 if "openai_model" not in st.session_state:
