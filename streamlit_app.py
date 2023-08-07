@@ -34,8 +34,9 @@ with st.sidebar:
             frequency_penalty = st.slider("Frequency Penalty", min_value=0.0, max_value=1.0, value=0.0, step=0.1)
             presence_penalty = st.slider("Presence Penalty", min_value=0.0, max_value=1.0, value=0.0, step=0.1)
             n = st.slider("n", min_value=1, max_value=5, value=1, step=1)
-        else if (model == 'llama2'):
-            dummy = st.slider("Temperature", min_value=0.1, max_value=1.0, value=0.7, step=0.1)
+        else:
+            if (model == 'llama2'):
+                dummy = st.slider("Temperature", min_value=0.1, max_value=1.0, value=0.7, step=0.1)
 
     openai.api_key = openai_api
 
