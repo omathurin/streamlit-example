@@ -126,7 +126,7 @@ if prompt := st.chat_input("What is up?"):
                     message_placeholder.markdown(full_response + "▌")
             else:
                 if (model == 'text-davinci-003'):
-                    response = openai.Completion.create(
+                    for response in openai.Completion.create(
                         engine=model,
                         prompt=prompts,
                         temperature=temperature,
@@ -136,8 +136,10 @@ if prompt := st.chat_input("What is up?"):
                         presence_penalty=presence_penalty,
                         n=n,
                         best_of=best_of
-                    )
-        response_output = response['choices'][0]['text']
+                    ):
+                        full_response += response['choices'][0]['text']
+                        message_placeholder.markdown(full_response + "▌")
+
         message_placeholder.markdown(full_response)
         generate_and_play(audio_text=full_response)
     st.session_state.messages.append({"role": "assistant", "content": full_response})
