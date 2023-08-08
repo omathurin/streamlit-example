@@ -103,9 +103,10 @@ if prompt := st.chat_input("What is up?"):
         message_placeholder = st.empty()
         full_response = ""
         if (model == 'HugChat'):
-            for response in hf_generate_response(prompt, hf_email, hf_pass) :
-                full_response += response
-                message_placeholder.markdown(full_response + "▌")
+            with st.spinner("Thinking..."):
+                for response in hf_generate_response(prompt, hf_email, hf_pass) :
+                    full_response += response
+                    message_placeholder.markdown(full_response + "▌")
         else:
             if ((model == 'gpt-3.5-turbo') or (model == 'gpt-4')):
                 for response in openai.ChatCompletion.create(
