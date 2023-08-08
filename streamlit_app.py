@@ -25,14 +25,13 @@ st.title("ChatGPT-like clone")
 with st.sidebar:
     st.title('💬 Chatbot')
 
-    models = ['gpt-3.5-turbo', 'gpt-4', 'HugChat']
+    models = ['gpt-3.5-turbo', 'gpt-4', 'text-davinci-003', 'HugChat']
     model = st.sidebar.selectbox("Select Model", models)
 
-    if ((model == 'gpt-3.5-turbo') or (model == 'gpt-4')):
+    if ((model == 'gpt-3.5-turbo') or (model == 'gpt-4') or (model == 'text-davinci-003')):
         if 'OPENAI_API_KEY' in st.secrets:
             st.success('API key already provided!', icon='✅')
             openai_api = st.secrets['OPENAI_API_KEY']
-                
         else:
             openai_api = st.text_input('Enter OpenAI API token:', type='password')
             if not (openai_api.startswith('sk-') and len(openai_api)==51):
@@ -55,7 +54,7 @@ with st.sidebar:
                     st.success('Proceed to entering your prompt message!', icon='👉')
 
     with st.expander("Advanced Settings"):
-        if ((model == 'gpt-3.5-turbo') or (model == 'gpt-4')):
+        if ((model == 'gpt-3.5-turbo') or (model == 'gpt-4') or (model == 'text-davinci-003')):
             if ((model == 'gpt-3.5-turbo') or (model == 'text-davinci-003')):
                 max_ = 4096
             else:
@@ -67,6 +66,9 @@ with st.sidebar:
             frequency_penalty = st.slider("Frequency Penalty", min_value=0.0, max_value=1.0, value=0.0, step=0.1)
             presence_penalty = st.slider("Presence Penalty", min_value=0.0, max_value=1.0, value=0.0, step=0.1)
             n = st.slider("n", min_value=1, max_value=5, value=1, step=1)
+            # Add best_of option for text-davinci-003
+            if model == 'text-davinci-003':
+                best_of = st.slider("Best Of", min_value=1, max_value=5, value=1, step=1)
         else:
             if (model == 'HugChat'):
                 dummy = st.slider("Temperature", min_value=0.1, max_value=1.0, value=0.7, step=0.1)
@@ -122,6 +124,20 @@ if prompt := st.chat_input("What is up?"):
                 ):
                     full_response += response.choices[0].delta.get("content", "")
                     message_placeholder.markdown(full_response + "▌")
+            else:
+                if (model == 'text-davinci-003'):
+                    response = openai.Completion.create(
+                        engine=model,
+                        prompt=prompts,
+                        temperature=temperature,
+                        max_tokens=max_tokens,
+                        top_p=top_p,
+                        frequency_penalty=frequency_penalty,
+                        presence_penalty=presence_penalty,
+                        n=n,
+                        best_of=best_of
+                    )
+        response_output = response['choices'][0]['text']
         message_placeholder.markdown(full_response)
         generate_and_play(audio_text=full_response)
     st.session_state.messages.append({"role": "assistant", "content": full_response})
