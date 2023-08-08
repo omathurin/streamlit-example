@@ -41,10 +41,10 @@ with st.sidebar:
         openai.api_key = openai_api
     else:
         if (model == 'HugChat'):
-            if ('EMAIL' in st.secrets) and ('PASS' in st.secrets):
+            if ('HUGGINGFACE_EMAIL' in st.secrets) and ('HUGGINGFACE_PASS' in st.secrets):
                 st.success('HuggingFace Login credentials already provided!', icon='✅')
-                hf_email = st.secrets['EMAIL']
-                hf_pass = st.secrets['PASS']
+                hf_email = st.secrets['HUGGINGFACE_EMAIL']
+                hf_pass = st.secrets['HUGGINGFACE_PASS']
             else:
                 hf_email = st.text_input('Enter E-mail:', type='password')
                 hf_pass = st.text_input('Enter password:', type='password')
